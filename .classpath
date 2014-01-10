@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+	<classpathentry kind="src" path="commons/dto/src/main/java" />
+	<classpathentry kind="src" path="commons/dto/src/test/java" />
+	<classpathentry kind="src" path="commons/jpa/src/main/java" />
+	<classpathentry kind="src" path="commons/jpa/src/test/java" />
+	<classpathentry exported="true" kind="con"
+		path="org.eclipse.iam.jdt.core.mavenClasspathContainer" />
+	<classpathentry exported="true" kind="con"
+		path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER" />
+	<classpathentry kind="output" path="target/classes" />
+</classpath>

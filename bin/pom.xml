@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>pl.systempoint.cobertura</groupId>
+	<artifactId>b2b</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>B2B Commons</name>
+	<description>B2B Commons</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mvn.surefire.args>-Dfile.encoding=UTF-8
+			-Dsun.jnu.encoding=UTF-8</mvn.surefire.args>
+		<skip.test>false</skip.test>
+		<java.version>1.6</java.version>
+
+		<junit.version>4.10</junit.version>
+
+		<maven.bundle.version>2.3.7</maven.bundle.version>
+		<maven.compiler.version>2.5.1</maven.compiler.version>
+		<maven.resource.version>2.6</maven.resource.version>
+		<mvn.surefire.version>2.13</mvn.surefire.version>
+
+		<slf4j.version>1.7.2</slf4j.version>
+	</properties>
+
+	<dependencies>
+		<!-- junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<!-- spring end -->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resource.version}</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<argLine>-Xms512m -Xmx1024m</argLine>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${mvn.surefire.version}</version>
+				<configuration>
+					<argLine>-Xms512m -Xmx1024m</argLine>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<argLine>${mvn.surefire.args}</argLine>
+					<inherited>true</inherited>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.2</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<!-- profil developerski - aktywowany domyślnie -->
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+
+
+		<!-- profil hudson - aktywowany na linuxie -->
+		<profile>
+			<id>hudson</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+		</profile>
+
+		<profile>
+			<id>coverage</id>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-it-maven-plugin</artifactId>
+						<version>2.5</version>
+						<configuration>
+							<formats>
+								<format>xml</format>
+							</formats>
+							<check>
+								<haltOnFailure>false</haltOnFailure>
+							</check>
+						</configuration>
+						<executions>
+							<execution>
+								<id>cobertura-clean</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>clean</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>cobertura-instrument</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>instrument</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>cobertura-check-only</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>check-only</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+			<!-- <reporting> -->
+			<!-- <plugins> -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.codehaus.mojo</groupId> -->
+			<!-- <artifactId>cobertura-it-maven-plugin</artifactId> -->
+			<!-- <version>2.5</version> -->
+			<!-- <configuration> -->
+			<!-- <formats> -->
+			<!-- <format>html</format> -->
+			<!-- <format>xml</format> -->
+			<!-- </formats> -->
+			<!-- </configuration> -->
+			<!-- <reportSets> -->
+			<!-- <reportSet> -->
+			<!-- <reports> -->
+			<!-- <report>report-only</report> -->
+			<!-- </reports> -->
+			<!-- </reportSet> -->
+			<!-- </reportSets> -->
+			<!-- </plugin> -->
+			<!-- </plugins> -->
+			<!-- </reporting> -->
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.6</version>
+						<configuration>
+							<outputDirectory>./target/tmpCobertura</outputDirectory>
+							<formats>
+								<format>html</format>
+							</formats>
+							<aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+				</plugins>
+			</reporting>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>cobertura-it-maven-plugin-maven2-release</id>
+					<url>http://cobertura-it-maven-plugin.googlecode.com/svn/maven2/releases</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+
+		<profile>
+			<id>cobertura1</id>
+
+			<build>
+				<plugins>
+					<!-- Configure the ApsectJ Maven Plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>aspectj-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>compile</goal>
+									<goal>test-compile</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<source>1.6</source>
+							<target>1.6</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<reporting>
+				<plugins>
+					<!-- This is the standard reporting plugin -->
+					<plugin>
+						<artifactId>maven-project-info-reports-plugin</artifactId>
+					</plugin>
+					<!-- This is the Cobertura reporting plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</reporting>
+			<dependencies>
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<version>4.7</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.aspectj</groupId>
+					<artifactId>aspectjrt</artifactId>
+					<version>1.6.6</version>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>runCobertura</id>
+			<activation>
+				<property>
+					<name>runCobertura</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+				<working.dir>C:\Users\galica\workspace\b2b-commons-cobertura</working.dir>
+				<cobertura.format>html</cobertura.format>
+				<cobertura.working.dir>${working.dir}/target2/cobertura</cobertura.working.dir>
+				<cobertura.complete.ser.file>${cobertura.working.dir}/complete.ser</cobertura.complete.ser.file>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>2.4.1</version>
+						<inherited>false</inherited>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>.</directory>
+									<includes>
+										<include>cobertura.ser</include>
+									</includes>
+								</fileset>
+								<fileset>
+									<directory>${cobertura.working.dir}</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<id>cobertura-Instrument</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<taskdef resource="tasks.properties" />
+										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+										<if>
+											<available file="${project.build.outputDirectory}" />
+											<then>
+												<cobertura-instrument>
+													<fileset dir="${project.build.outputDirectory}">
+														<include name="**/*.class" />
+													</fileset>
+												</cobertura-instrument>
+											</then>
+										</if>
+									</target>
+								</configuration>
+							</execution>
+							<execution>
+								<id>cobertura-createCombinedSerFile</id>
+								<phase>generate-test-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<taskdef resource="tasks.properties" />
+										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+										<if>
+											<available file="${cobertura.complete.ser.file}" />
+											<then>
+												<cobertura-merge datafile="${basedir}/tmp.ser">
+													<fileset file="${cobertura.complete.ser.file}" />
+													<fileset file="${basedir}/cobertura.ser" />
+												</cobertura-merge>
+												<move file="${basedir}/tmp.ser" tofile="${basedir}/cobertura.ser" />
+											</then>
+										</if>
+									</target>
+								</configuration>
+							</execution>
+							<execution>
+								<id>cobertura-copyResultSerFileAndSources</id>
+								<phase>test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<taskdef resource="tasks.properties" />
+										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+										<if>
+											<available file="${basedir}/cobertura.ser" />
+											<then>
+												<move file="${basedir}/cobertura.ser" tofile="${cobertura.complete.ser.file}" />
+												<mkdir dir="${cobertura.working.dir}/source" />
+												<if>
+													<available file="${basedir}/src/main/java" />
+													<then>
+														<copy todir="${cobertura.working.dir}/source">
+															<fileset dir="src/main/java">
+																<include name="**/*.java" />
+															</fileset>
+														</copy>
+													</then>
+												</if>
+												<cobertura-report datafile="${cobertura.complete.ser.file}"
+													format="${cobertura.format}" destdir="${cobertura.working.dir}/report">
+													<fileset dir="${cobertura.working.dir}/source" />
+												</cobertura-report>
+											</then>
+										</if>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>net.sourceforge.cobertura</groupId>
+								<artifactId>cobertura</artifactId>
+								<version>1.9.4.1</version>
+							</dependency>
+							<dependency>
+								<groupId>ant-contrib</groupId>
+								<artifactId>ant-contrib</artifactId>
+								<version>20020829</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+			<dependencies>
+				<dependency>
+					<groupId>net.sourceforge.cobertura</groupId>
+					<artifactId>cobertura</artifactId>
+					<version>1.9.4.1</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+</project>

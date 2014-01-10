@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <taskdef resource="tasks.properties"/>
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  <if>
+    <available file="C:\Users\galica\workspace\b2b-commons-cobertura\commons\jpa/cobertura.ser"/>
+    <then>
+      <move file="C:\Users\galica\workspace\b2b-commons-cobertura\commons\jpa/cobertura.ser" tofile="C:\Users\galica\workspace\b2b-commons-cobertura/target2/cobertura/complete.ser"/>
+      <mkdir dir="C:\Users\galica\workspace\b2b-commons-cobertura/target2/cobertura/source"/>
+      <if>
+        <available file="C:\Users\galica\workspace\b2b-commons-cobertura\commons\jpa/src/main/java"/>
+        <then>
+          <copy todir="C:\Users\galica\workspace\b2b-commons-cobertura/target2/cobertura/source">
+            <fileset dir="src/main/java">
+              <include name="**/*.java"/>
+            </fileset>
+          </copy>
+        </then>
+      </if>
+      <cobertura-report destdir="C:\Users\galica\workspace\b2b-commons-cobertura/target2/cobertura/report" datafile="C:\Users\galica\workspace\b2b-commons-cobertura/target2/cobertura/complete.ser" format="html">
+        <fileset dir="C:\Users\galica\workspace\b2b-commons-cobertura/target2/cobertura/source"/>
+      </cobertura-report>
+    </then>
+  </if>
+</target>
+</project>
