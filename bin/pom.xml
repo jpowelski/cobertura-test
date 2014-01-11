@@ -277,7 +277,7 @@
 			</activation>
 			<properties>
 				<working.dir>C:\Users\galica\workspace\b2b-commons-cobertura</working.dir>
-				<cobertura.format>html</cobertura.format>
+				<cobertura.format>xml</cobertura.format>
 				<cobertura.working.dir>${working.dir}/target2/cobertura</cobertura.working.dir>
 				<cobertura.complete.ser.file>${cobertura.working.dir}/complete.ser</cobertura.complete.ser.file>
 			</properties>
